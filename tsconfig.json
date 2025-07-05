@@ -8,7 +8,10 @@
     "strict": true,
     "moduleResolution": "Node",
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noUncheckedIndexedAccess": true,
   },
   "include": ["./src/**/*.ts"],
   "exclude": ["node_modules"]
