@@ -1,0 +1,29 @@
+{
+  "name": "bootdev_pokedex",
+  "version": "1.0.0",
+  "description": "Build a REPL pokedex on the command line in Typescript. Learn how to use JSON, make network requests, and implement caching.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "vitest --run",
+    "build": "npx tsc",
+    "start": "node dist/main.js",
+    "dev": "npm run build && npm run start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jmayenberger/bootdev_Pokedex.git"
+  },
+  "keywords": [],
+  "author": "jmayenberger",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jmayenberger/bootdev_Pokedex/issues"
+  },
+  "homepage": "https://github.com/jmayenberger/bootdev_Pokedex#readme",
+  "devDependencies": {
+    "@types/node": "^24.0.10",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  }
+}
