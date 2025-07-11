@@ -1,4 +1,5 @@
 import { createInterface } from "readline";
+import { getCommands } from "./command.js";
 
 export function cleanInput(input: string): string[] {
     return input
@@ -8,15 +9,23 @@ export function cleanInput(input: string): string[] {
 }
 
 export function startREPL(): void {
+    const commands = getCommands();
+
     const rl = createInterface({
         input: process.stdin,
         output: process.stdout,
         prompt: "Pokedex > "
     });
     rl.prompt();
+
     rl.on("line", async (input) => {
         const words = cleanInput(input);
-        if (words.length > 0) console.log(`Your command was: ${words[0]}`);
+        const commandName = words[0] ?? "";
+        if (commands[commandName]){
+            commands[commandName].callback(words.slice(1));
+        } else {
+            console.log("Unknown command");
+        }
         rl.prompt();
     })
 }
