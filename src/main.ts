@@ -3,7 +3,7 @@ import { initState } from "./state.js";
 
 async function main() {
   const state = initState();
-  startREPL(state);
+  await startREPL(state);
 }
 
 main();

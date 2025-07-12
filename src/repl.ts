@@ -7,16 +7,21 @@ export function cleanInput(input: string): string[] {
     .filter((word) => word !== "");
 };
 
-export function startREPL(state: State): void {
-    state.interface.prompt();
-    state.interface.on("line", async (input) => {
+export async function startREPL(state: State): Promise<void> {
+    state.readline.prompt();
+    state.readline.on("line", async (input) => {
         const words = cleanInput(input);
         const commandName = words[0] ?? "";
         if (state.commands[commandName]){
-            state.commands[commandName].callback(state);
+            try {
+                await state.commands[commandName].callback(state);
+            } catch (error) {
+                console.log(`Error fetching data, try again: ${(error as Error).message}`);
+            }
+            
         } else {
             console.log("Unknown command - Use command 'help' for instructions");
         }
-        state.interface.prompt();
+        state.readline.prompt();
     })
 };

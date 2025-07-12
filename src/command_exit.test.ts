@@ -9,7 +9,7 @@ describe("commandExit()", () => {
             return undefined as never;
         });
         const state = initState();
-        const closeSpy = vi.spyOn(state.interface, "close");
+        const closeSpy = vi.spyOn(state.readline, "close");
         commandExit(state);
         expect(consoleSpy).toHaveBeenCalledExactlyOnceWith("Closing the Pokedex... Goodbye!");
         expect(exitSpy).toHaveBeenCalledExactlyOnceWith(0);
