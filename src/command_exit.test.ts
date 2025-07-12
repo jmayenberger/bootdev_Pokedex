@@ -1,5 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
 import { commandExit } from "./command_exit.js";
+import { initState } from "./state.js";
 
 describe("commandExit()", () => {
     test("should print exit message and terminate", () => {
@@ -7,9 +8,12 @@ describe("commandExit()", () => {
         const exitSpy = vi.spyOn(process, "exit").mockImplementation(() => {
             return undefined as never;
         });
-        commandExit();
+        const state = initState();
+        const closeSpy = vi.spyOn(state.interface, "close");
+        commandExit(state);
         expect(consoleSpy).toHaveBeenCalledExactlyOnceWith("Closing the Pokedex... Goodbye!");
         expect(exitSpy).toHaveBeenCalledExactlyOnceWith(0);
+        expect(closeSpy).toHaveBeenCalled;
         consoleSpy.mockRestore();
         exitSpy.mockRestore();
     });
