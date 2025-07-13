@@ -6,7 +6,7 @@ describe("test commandHelp", () => {
     test("", () => {
         vi.clearAllMocks();
         const spyConsole = vi.spyOn(console, "log").mockImplementation(() => {});
-        const state = initState();
+        const state = initState(0);
         commandHelp(state);
         const out = (spyConsole.mock.calls[0]?.[0] as string) ?? "";
         expect(out).toBeTypeOf("string");

@@ -106,7 +106,7 @@ describe.each([
   it("should call correct command", () => {
     vi.clearAllMocks();
     const spy = vi.spyOn(expected_call[0] as any, expected_call[1] as string).mockImplementation(async () => {});
-    const state = initState();
+    const state = initState(0);
     startREPL(state);
     stdin.send(input + "\n");
     expect(spy).toHaveBeenCalledWith(expected_param ?? state);

@@ -16,7 +16,7 @@ export type State = {
     prevLocationsURL?: string | null, 
 };
 
-export function initState (): State {
+export function initState (cacheInterval: number): State {
     return {
         readline: createInterface({
             input: process.stdin,
@@ -24,6 +24,6 @@ export function initState (): State {
             prompt: "Pokedex > "
         }),
         commands: getCommands(),
-        pokeapi: new PokeAPI(),
+        pokeapi: new PokeAPI(cacheInterval),
     };
 };
