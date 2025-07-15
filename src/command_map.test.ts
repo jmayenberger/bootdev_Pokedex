@@ -33,7 +33,7 @@ describe.each([
   it(`should print locations, run ${inputs}`, async () => {
     vi.clearAllMocks();
     const spy = vi.spyOn(expected_call[0] as any, expected_call[1] as string).mockImplementation(async () => {});
-    const state = initState(0);
+    const state = initState(1e4);
     for (const input of inputs) {
         if (input === "map") await commandMapForward(state);
         else if (input === "mapb") await commandMapBack(state);

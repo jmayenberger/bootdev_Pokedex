@@ -1,23 +1,43 @@
 import { type State } from "./state.js";
 
 export async function commandMapForward(state: State): Promise<void> {
-    if (state.nextLocationsURL === null) {
+    const nextLocationsURL = state.nextLocationsURL;
+    if (nextLocationsURL === null) {
         console.log("you're on the last page");
         return;
     }
-    const locations = state.pokeapi.fetchLocations(state.nextLocationsURL as string | undefined);
-    for (const location of (await locations).results) console.log(location.name);
-    state.nextLocationsURL = (await locations).next;
-    state.prevLocationsURL = (await locations).previous;
+    const locations = await state.pokeapi.fetchLocations(nextLocationsURL);
+    for (const location of locations.results) {
+        const name = location.name;
+        const url = location.url;
+        const id = url.split("/").filter(segment => segment !== '').at(-1);
+        console.log(`${name} id: ${id}`);
+    }
+    if (locations.next === null) state.nextLocationsURL = null;
+    else state.nextLocationsURL = new URL(locations.next);
+    if (locations.previous === null) state.prevLocationsURL = null;
+    else state.prevLocationsURL = new URL(locations.previous);
 };
 
 export async function commandMapBack(state: State): Promise<void> {
-    if (state.prevLocationsURL === null) {
+    const prevLocationsURL = state.prevLocationsURL;
+    if (prevLocationsURL === null) {
         console.log("you're on the first page");
         return;
     }
-    const locations = state.pokeapi.fetchLocations(state.prevLocationsURL as string | undefined);
-    for (const location of (await locations).results) console.log(location.name);
-    state.nextLocationsURL = (await locations).next;
-    state.prevLocationsURL = (await locations).previous;
+    if (prevLocationsURL === undefined) {
+        await commandMapForward(state);
+        return;
+    }
+    const locations = await state.pokeapi.fetchLocations(prevLocationsURL);
+    for (const location of locations.results) {
+        const name = location.name;
+        const url = location.url;
+        const id = url.split("/")[-1];
+        console.log(`${name} id: ${id}`);
+    }
+    if (locations.next === null) state.nextLocationsURL = null;
+    else state.nextLocationsURL = new URL(locations.next);
+    if (locations.previous === null) state.prevLocationsURL = null;
+    else state.prevLocationsURL = new URL(locations.previous);
 };

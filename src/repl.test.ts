@@ -74,7 +74,7 @@ describe.each([
     {
       input: " ExIt please bla bla",
       expected_call: [commandExitModule, "commandExit"],
-      expected_param: undefined,
+      expected_param: ["please", "bla", "bla"],
       expected_call_number: 1,
     },
     {
@@ -86,7 +86,7 @@ describe.each([
     {
       input: "  hElP  bj adsljasdfö",
       expected_call: [commandHelpModule, "commandHelp"],
-      expected_param: undefined,
+      expected_param: ["bj", "adsljasdfö"],
       expected_call_number: 1,
     },
     {
@@ -106,10 +106,12 @@ describe.each([
   it("should call correct command", () => {
     vi.clearAllMocks();
     const spy = vi.spyOn(expected_call[0] as any, expected_call[1] as string).mockImplementation(async () => {});
-    const state = initState(0);
+    const state = initState(1e4);
     startREPL(state);
     stdin.send(input + "\n");
-    expect(spy).toHaveBeenCalledWith(expected_param ?? state);
+    if (typeof expected_param === "string") expect(spy).toHaveBeenCalledWith(expected_param);
+    else if (expected_param) expect(spy).toHaveBeenCalledWith(state, ...expected_param);
+    else expect(spy).toHaveBeenCalledWith(state);
     expect(spy).toHaveBeenCalledTimes(expected_call_number);
     spy.mockRestore();
     state.readline.close();

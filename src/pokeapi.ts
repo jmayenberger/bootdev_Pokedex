@@ -1,7 +1,7 @@
 import { Cache } from "./pokecache.js";
 
 export class PokeAPI {
-  private static readonly baseURL = "https://pokeapi.co/api/v2";
+  private static readonly baseURL = new URL("https://pokeapi.co/api/v2");
   #cache: Cache;
 
   constructor(cacheInterval: number) {
@@ -12,30 +12,30 @@ export class PokeAPI {
     this.#cache.stopReapLoop();
   }
 
-  async fetchWithCache<T>(URL: string): Promise<T> {
-    const cached = this.#cache.get<T>(URL);
+  async fetchWithCache<T>(pageURL: URL): Promise<T> {
+    const cached = this.#cache.get<T>(pageURL);
     if (cached) return cached;
     try {
-        const response = await fetch(URL);
+        const response = await fetch(pageURL.toString());
         if (!response.ok) {
             throw new Error(`${response.status} ${response.statusText}`);
         }
         const json: T = await response.json();
-        this.#cache.add<T>(URL, json);
+        this.#cache.add<T>(pageURL, json);
         return json;
     } catch (error) {
         throw new Error(`Error fetching locations: ${(error as Error).message}`);
     }
   }
 
-  async fetchLocations(pageURL?: string): Promise<ShallowLocations> {
-    pageURL = pageURL ?? `${PokeAPI.baseURL}/location-area`;
+  async fetchLocations(pageURL?: URL): Promise<ShallowLocations> {
+    pageURL = pageURL ?? new URL(`${PokeAPI.baseURL.toString()}/location-area`);
     const json = await this.fetchWithCache<ShallowLocations>(pageURL);
     return json;
   }
 
-  async fetchLocation(locationName: string): Promise<Location> {
-    const pageURL = `${PokeAPI.baseURL}/location-area/${locationName}`;
+  async fetchLocation(locationName: string | number): Promise<Location> {
+    const pageURL = new URL(`${PokeAPI.baseURL.toString()}/location-area/${locationName}`);
     const json = await this.fetchWithCache<Location>(pageURL);
     return json;
   }
@@ -48,15 +48,21 @@ export type ShallowLocations = {
   results: {
     name: string,
     url: string,
-  }[]
+  }[],
 };
 
 export type Location = {
-  encounter_method_rates: any[]
-  game_index: number
-  id: number
-  location: Location
-  name: string
-  names: any[]
-  pokemon_encounters: any[]
+  encounter_method_rates: any[],
+  game_index: number,
+  id: number,
+  location: Location,
+  name: string,
+  names: any[],
+  pokemon_encounters: {
+    pokemon: {
+      name: string,
+      url: string,
+    },
+    version_details: any[],
+  }[],
 };

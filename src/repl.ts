@@ -12,9 +12,10 @@ export async function startREPL(state: State): Promise<void> {
     state.readline.on("line", async (input) => {
         const words = cleanInput(input);
         const commandName = words[0] ?? "";
+        const args = words.slice(1);
         if (state.commands[commandName]){
             try {
-                await state.commands[commandName].callback(state);
+                await state.commands[commandName].callback(state, ...args);
             } catch (error) {
                 console.log(`Error fetching data, try again: ${(error as Error).message}`);
             }

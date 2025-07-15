@@ -8,7 +8,7 @@ describe("commandExit()", () => {
         const exitSpy = vi.spyOn(process, "exit").mockImplementation(() => {
             return undefined as never;
         });
-        const state = initState(0);
+        const state = initState(1e4);
         const closeSpy = vi.spyOn(state.readline, "close");
         commandExit(state);
         expect(consoleSpy).toHaveBeenCalledExactlyOnceWith("Closing the Pokedex... Goodbye!");
