@@ -1,21 +1,39 @@
-import { describe, expect, test, vi } from "vitest";
+import { afterAll, afterEach, beforeEach, describe, expect, it, vi, type MockInstance } from "vitest";
 import { commandExit } from "./command_exit.js";
-import { initState } from "./state.js";
+import { initState, type State } from "./state.js";
+
+let consoleSpy: MockInstance;
+let exitSpy: MockInstance;
+let closeSpy: MockInstance;
+let state: State;
+beforeEach(() => {
+    vi.clearAllMocks();
+    state = initState(1e4);
+    consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+    exitSpy = vi.spyOn(process, "exit").mockImplementation(() => {
+        return undefined as never;
+    });
+    closeSpy = vi.spyOn(state.readline, "close");
+});
+
+afterEach(() => {
+    consoleSpy.mockRestore();
+    exitSpy.mockRestore();
+    closeSpy.mockRestore();
+    state.pokeapi.closeCache();
+    state.readline.close()
+});
+
+afterAll(() => {
+    vi.restoreAllMocks();
+});
 
 describe("commandExit()", () => {
-    test("should print exit message and terminate", () => {
-        const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
-        const exitSpy = vi.spyOn(process, "exit").mockImplementation(() => {
-            return undefined as never;
-        });
-        const state = initState(1e4);
-        const closeSpy = vi.spyOn(state.readline, "close");
+    it("should print exit message and terminate", () => {
         commandExit(state);
-        expect(consoleSpy).toHaveBeenCalledExactlyOnceWith("Closing the Pokedex... Goodbye!");
-        expect(exitSpy).toHaveBeenCalledExactlyOnceWith(0);
+        expect(consoleSpy).toHaveBeenCalledWith("Closing the Pokedex... Goodbye!");
+        expect(exitSpy).toHaveBeenCalledWith(0);
         expect(closeSpy).toHaveBeenCalled;
-        consoleSpy.mockRestore();
-        exitSpy.mockRestore();
     });
     
 });

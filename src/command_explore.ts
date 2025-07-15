@@ -6,8 +6,15 @@ export async function commandExplore(state: State, ...args: string[]): Promise<v
         console.log("Please specifiy a location to explore");
         return;
     }
-    console.log(`Exploring ${location}...`);
-    const data = await state.pokeapi.fetchLocation(location);
+    let data;
+    if (isNaN(parseInt(location))) {
+        console.log(`Exploring ${location}...`);
+        data = await state.pokeapi.fetchLocation(location);
+    } else {
+        console.log(`Exploring location id: ${parseInt(location)} ...`);
+        data = await state.pokeapi.fetchLocation(location);
+        console.log(`Location id: ${parseInt(location)} is ${data.name}`);
+    }
     console.log("Found Pokemon:");
     const encounters = data.pokemon_encounters;
     for (const pokemon of encounters) {

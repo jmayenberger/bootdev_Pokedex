@@ -2,8 +2,10 @@ import { commandExit } from "./command_exit.js";
 import { commandHelp } from "./command_help.js";
 import { commandMapBack, commandMapForward } from "./command_map.js";
 import { commandExplore } from "./command_explore.js";
+import { commandCatch } from "./command_catch.js";
 
 import { type CLICommand} from "./state.js";
+
 
 export function getCommands(): Record<string, CLICommand> {
   return {
@@ -21,6 +23,11 @@ export function getCommands(): Record<string, CLICommand> {
       name: "explore <location_name or id>",
       description: "Lists all catchable Pokemon in a given location",
       callback: commandExplore,
+    },
+    catch: {
+      name: "catch <pokemon_name>",
+      description: "Trys to catch a Pokemon",
+      callback: commandCatch,
     },
     exit: {
       name: "exit",

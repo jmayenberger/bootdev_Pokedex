@@ -1,12 +1,12 @@
 import { Cache } from "./pokecache.js";
-import { test, expect , afterEach} from "vitest";
+import { it, describe, expect, afterEach} from "vitest";
 
-let cache:Cache;
+let cache: Cache;
 afterEach(() => {
   cache.stopReapLoop();
 });
 
-test.each([
+describe.each([
   {
     key: new URL("https://example.com"),
     val: "testdata",
@@ -17,14 +17,15 @@ test.each([
     val: "moretestdata",
     interval: 1000, // 1 second
   },
-])("Test Caching $interval ms", async ({ key, val, interval }) => {
-  cache = new Cache(interval);
-
-  cache.add(key, val);
-  const cached = cache.get(key);
-  expect(cached).toBe(val);
-
-  await new Promise((resolve) => setTimeout(resolve, interval + 100));
-  const reaped = cache.get(key);
-  expect(reaped).toBe(undefined);
+])("test pokecache", async ({ key, val, interval }) => {
+  
+  it(`should create entry ${val} and delete after ${interval}ms`, async () => {
+    cache = new Cache(interval);
+    cache.add(key, val);
+    const cached = cache.get(key);
+    expect(cached).toBe(val);
+    await new Promise((resolve) => setTimeout(resolve, interval * 2));
+    const reaped = cache.get(key);
+    expect(reaped).toBe(undefined);
+  });
 });

@@ -4,8 +4,8 @@ import { describe, expect, it, beforeEach, afterEach, vi, afterAll, type MockIns
 import { commandExplore } from "./command_explore.js";
 
 
-let spy:MockInstance;
-let state:State;
+let spy: MockInstance;
+let state: State;
 beforeEach(() => {
   vi.clearAllMocks();
   spy = vi.spyOn(console, "log").mockImplementation(() => {});
@@ -14,6 +14,7 @@ beforeEach(() => {
 
 afterEach(() => { 
   state.pokeapi.closeCache();
+  state.readline.close();
   spy.mockRestore();
 });
 
@@ -22,6 +23,15 @@ afterAll(() => {
 });
 
 describe.each([
+    {
+      inputs: ["1"],
+      expected_params: [
+        "Exploring location id: 1 ...",
+        "Location id: 1 is canalave-city-area",
+        "Found Pokemon:",
+        "- tentacool",
+    ],
+    },
     {
       inputs: ["canalave-city-area"],
       expected_params: [
@@ -46,8 +56,6 @@ describe.each([
 
   it(`should print catchable pokemon, run ${inputs}`, async () => {
     await commandExplore(state, ...inputs);
-    // const calls = structuredClone(spy.mock.calls); 
-    // spy.mockRestore();
     for (const param of expected_params) {
       let param_called = false;
       for (const call of spy.mock.calls) {
