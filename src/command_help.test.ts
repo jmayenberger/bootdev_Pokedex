@@ -31,6 +31,7 @@ describe("test commandHelp", () => {
         expect(out.includes("mapb: "));
         expect(out.includes("explore: "));
         expect(out.includes("catch: "));
+        expect(out.includes("inspect: "));
         expect(out.includes("help: "));
         expect(out.includes("exit: "));
     });

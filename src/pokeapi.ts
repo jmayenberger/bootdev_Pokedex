@@ -14,7 +14,10 @@ export class PokeAPI {
 
   async fetchWithCache<T>(pageURL: URL): Promise<T> {
     const cached = this.#cache.get<T>(pageURL);
-    if (cached) return cached;
+    if (cached) {
+      console.log("returned cached information");
+      return cached;
+    }
     try {
         const response = await fetch(pageURL.toString());
         if (!response.ok) {
@@ -91,7 +94,20 @@ export type Pokemon = {
   past_types: any[],
   species: any,
   sprites: any,
-  stats: any[],
-  types: any[],
+  stats: {
+    base_stat: number
+    effort: number
+    stat: {
+      name: string
+      url: string
+    },
+  }[],
+  types: {
+    slot: number
+    type: {
+      name: string
+      url: string
+    },
+  }[],
   weight: number,
 };

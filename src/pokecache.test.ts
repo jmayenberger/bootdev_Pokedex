@@ -8,24 +8,26 @@ afterEach(() => {
 
 describe.each([
   {
-    key: new URL("https://example.com"),
+    key_set: new URL("https://example.com"),
+    key_get: new URL("https://example.com"),
     val: "testdata",
     interval: 500, // 1/2 second
   },
   {
-    key: new URL("https://example.com/path"),
+    key_set: new URL("https://example.com/path"),
+    key_get: new URL("https://example.com/path"),
     val: "moretestdata",
     interval: 1000, // 1 second
   },
-])("test pokecache", async ({ key, val, interval }) => {
+])("test pokecache", async ({ key_set, key_get, val, interval }) => {
   
   it(`should create entry ${val} and delete after ${interval}ms`, async () => {
     cache = new Cache(interval);
-    cache.add(key, val);
-    const cached = cache.get(key);
+    cache.add(key_set, val);
+    const cached = cache.get(key_get);
     expect(cached).toBe(val);
     await new Promise((resolve) => setTimeout(resolve, interval * 2));
-    const reaped = cache.get(key);
+    const reaped = cache.get(key_get);
     expect(reaped).toBe(undefined);
   });
 });

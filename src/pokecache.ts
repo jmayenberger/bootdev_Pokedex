@@ -4,7 +4,7 @@ export type CacheEntry<T> = {
 };
 
 export class Cache {
-    #cache = new Map<URL, CacheEntry<any>>();
+    #cache = new Map<string, CacheEntry<any>>();
     #reapIntervalId: NodeJS.Timeout | undefined = undefined;
     #interval: number;
 
@@ -14,11 +14,11 @@ export class Cache {
     }
 
     add<T>(key: URL, val: T): void {
-        this.#cache.set(key, { createdAt: Date.now(), val });
+        this.#cache.set(key.toString(), { createdAt: Date.now(), val });
     }
 
     get<T>(key: URL): T | undefined {
-        return this.#cache.get(key)?.val;
+        return this.#cache.get(key.toString())?.val;
     }
 
     #reap(): void {
