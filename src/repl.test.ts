@@ -9,6 +9,8 @@ import * as commandHelpModule from "./command_help.js";
 import * as commandMapModule from "./command_map.js";
 import * as commandExploreModule from "./command_explore.js";
 import * as commandCatchModule from "./command_catch.js";
+import * as commandInspectModule from "./command_inspect.js";
+import * as commandPokedexModule from "./command_pokedex.js";
 
 
 let spyConsole: MockInstance;
@@ -18,6 +20,8 @@ let spyCommandMapForward: MockInstance;
 let spyCommandMapBackward: MockInstance;
 let spyCommandExplore: MockInstance;
 let spyCommandCatch: MockInstance;
+let spyCommandInspect: MockInstance;
+let spyCommandPokedex: MockInstance;
 let state: State;
 let spys: Record<string, MockInstance>;
 
@@ -30,6 +34,8 @@ beforeEach(() => {
   spyCommandMapBackward = vi.spyOn(commandMapModule, "commandMapBack").mockImplementation(async () => {});
   spyCommandExplore = vi.spyOn(commandExploreModule, "commandExplore").mockImplementation(async () => {});
   spyCommandCatch = vi.spyOn(commandCatchModule, "commandCatch").mockImplementation(async () => {});
+  spyCommandInspect = vi.spyOn(commandInspectModule, "commandInspect").mockImplementation(async () => {});
+  spyCommandPokedex = vi.spyOn(commandPokedexModule, "commandPokedex").mockImplementation(async () => {});
   state = initState(1e4);
   spys = {
     spyConsole,
@@ -38,7 +44,9 @@ beforeEach(() => {
     spyCommandMapForward,
     spyCommandMapBackward,
     spyCommandExplore,
-    spyCommandCatch
+    spyCommandCatch,
+    spyCommandInspect,
+    spyCommandPokedex,
   };
 });
 
@@ -154,6 +162,16 @@ describe.each([
       input: "catch pikachu",
       expected_call: "spyCommandCatch",
       expected_param: ["pikachu"],
+    },
+    {
+      input: "inspect pidgey",
+      expected_call: "spyCommandInspect",
+      expected_param: ["pidgey"],
+    },
+    {
+      input: "pokedex",
+      expected_call: "spyCommandPokedex",
+      expected_param: undefined,
     },
 
   ])("startREPL()", async ({ input, expected_call, expected_param }) => {
